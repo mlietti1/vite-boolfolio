@@ -2,6 +2,6 @@
 
 @section('content')
 
-<h1>Pagina Pubblica</h1>
+<div id="app"></div>
 
 @endsection
