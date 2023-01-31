@@ -56,29 +56,53 @@ export default {
                     <img class="card-img-top" src="" alt="">
                     <div class="card-body">
                         <h5 class="card-title">{{ project.name }}</h5>
-                        <p><strong>{{ project.client_name }}</strong></p>
+
+                        <p v-if="project.type" class="type mb-3">{{ project.type.name }}</p>
+                        <p class="user">Author: {{ project.user.name }}</p>
+                        <span><strong>Client: </strong></span>
+                        <p>{{ project.client_name }}</p>
+
                         <p v-html="truncateText(project.summary)" class="card-text"></p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                        <div class="d-flex justify-content-between">
+                            <div class="tech" v-if="project.technologies.length">
+                                <span v-for="technology in project.technologies" :key="technology.id">#{{ technology.name }} </span>
+                            </div>
+                        <div class="tech" v-else>NA</div>
+                            <a class="info-btn" href="#">more info...</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="paginator">
+        <div class="d-flex justify-content-center paginator my-3">
+
+            <button :disabled="pagination.current === 1"
+            class="me-3 btn btn-secondary"
+            @click="getApi(1)">
+                <i class="fa-solid fa-angles-left"></i>
+            </button>
+
             <button :disabled="pagination.current === 1"
             class="me-3 btn btn-secondary"
             @click="getApi(pagination.current - 1)">
-                <i class="fa-solid fa-arrow-left"></i>
+                <i class="fa-solid fa-chevron-left"></i>
             </button>
 
             <button
             v-for="i in pagination.last" :key="i"
             class="me-3 btn btn-secondary"
+            :disabled="pagination.current === i"
             @click="getApi(i)">{{ i }}</button>
 
             <button :disabled="pagination.current === pagination.last" class="me-3 btn btn-secondary"
             @click="getApi(pagination.current + 1)">
-                <i class="fa-solid fa-arrow-right"></i>
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+
+            <button :disabled="pagination.current === pagination.last" class="me-3 btn btn-secondary"
+            @click="getApi(pagination.last)">
+                <i class="fa-solid fa-angles-right"></i>
             </button>
         </div>
     </div>
@@ -97,6 +121,31 @@ button{
         display: inline-block;
         min-width: 38px;
     }
+
+.type {
+    font-size: 0.8rem;
+    color: rgb(15, 176, 123);
+}
+
+.user{
+    font-size: 0.8rem;
+}
+
+.info-btn{
+    text-decoration: none;
+    color: #c187ff;
+    font-size: 0.8rem;
+    font-weight: 600;
+    &:hover{
+        color: #8d58c6;
+    }
+}
+
+.tech{
+    font-size: 0.8rem;
+    color: grey;
+    display: inline-block;
+}
 
 @media screen and (min-width: 576px ) {
     .card-text{
